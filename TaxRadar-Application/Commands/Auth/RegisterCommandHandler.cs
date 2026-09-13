@@ -7,10 +7,12 @@ using TaxRadar_Application.Queries.Auth;
 
 namespace TaxRadar_Application.Commands.Auth;
 
-public class RegisterCommandHandler(IRepository<User> repository, IPasswordHasher passwordHasher, IMapper mapper):IRequestHandler<RegisterQuery, UserDto>
+public class RegisterCommandHandler(IUserRepository repository, IPasswordHasher passwordHasher, IMapper mapper):IRequestHandler<RegisterQuery, UserDto>
 {
     public async Task<UserDto> Handle(RegisterQuery request, CancellationToken cancellationToken)
     {
+        var isExist = await repository.CheckIfUserExistByEmail(request.Email,cancellationToken);
+        if (isExist) throw new ArgumentException("The user with this email is already existig");
         var hashedPassword = passwordHasher.Hash(request.Password);
         var newUser = new User(request.Email,request.FullName,hashedPassword);
         await repository.AddAsync(newUser, cancellationToken);

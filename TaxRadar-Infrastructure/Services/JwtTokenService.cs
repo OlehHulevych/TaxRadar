@@ -11,7 +11,7 @@ namespace TaxRadar_Infrastructure.Services;
 
 public class JwtTokenService(IConfiguration config):IJwtTokenService
 {
-    public AuthTokenResponseDto GenerateToken(Guid userId, string email)
+    public string GenerateToken(Guid userId, string email)
     {
         Claim[] claims = new[]
         {
@@ -31,7 +31,7 @@ public class JwtTokenService(IConfiguration config):IJwtTokenService
             signingCredentials:creds
             );
         var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-        return new AuthTokenResponseDto(tokenString,expirity);
+        return tokenString;
 
 
 

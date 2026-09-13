@@ -6,7 +6,7 @@ using TaxRadar_Infrastructure.Persistance;
 
 namespace TaxRadar_Infrastructure.Repository;
 
-public class UserRepository(ApplicationDbContext context):IRepository<User>
+public class UserRepository(ApplicationDbContext context):IUserRepository
 {
     public async Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
@@ -30,5 +30,15 @@ public class UserRepository(ApplicationDbContext context):IRepository<User>
     public async Task SaveChangesAsync(CancellationToken cancellationToken)
     {
         await context.SaveChangesAsync();
+    }
+
+    public async Task<bool> CheckIfUserExistByEmail(string email, CancellationToken cancellationToken)
+    {
+        return await context.Users.Where(u=>u.Email.Equals(email)).AnyAsync(cancellationToken: cancellationToken);
+    }
+
+    public async Task<User?> GetUserByEmail(string email, CancellationToken cancellationToken)
+    {
+        return (await context.Users.FirstOrDefaultAsync(u => u.Email.Equals(email), cancellationToken));
     }
 }

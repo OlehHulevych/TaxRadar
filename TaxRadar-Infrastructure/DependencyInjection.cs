@@ -5,6 +5,7 @@ using Tax_Radar_Domain.Entities;
 using TaxRadar_Application.Interfaces;
 using TaxRadar_Infrastructure.Persistance;
 using TaxRadar_Infrastructure.Repository;
+using TaxRadar_Infrastructure.Services;
 
 namespace TaxRadar_Infrastructure;
 
@@ -19,6 +20,9 @@ public static class DependencyInjection
         services.AddScoped<IRepository<Client>, ClientRepository>();
         services.AddScoped<IExpenseRepository, ExpenseRepository>();
         services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IJwtTokenService, JwtTokenService>();
+        services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
         return services;
     }
 }
