@@ -7,7 +7,7 @@ using TaxRadar_Application.Queries.Auth;
 
 namespace TaxRadar_Application.Commands.Auth;
 
-public class LoginCommandHandler(IUserRepository repository, IJwtTokenService jwtTokenService, IPasswordHasher passwordHasher):IRequestHandler<LoginQuery, AuthTokenResponseDto>
+public class LoginCommandHandler(IUserRepository repository,IRefreshTokenRepository refreshTokenRepository, IJwtTokenService jwtTokenService, IPasswordHasher passwordHasher):IRequestHandler<LoginQuery, AuthTokenResponseDto>
 {
     public async Task<AuthTokenResponseDto> Handle(LoginQuery request, CancellationToken cancellationToken)
     {
@@ -17,6 +17,8 @@ public class LoginCommandHandler(IUserRepository repository, IJwtTokenService jw
         if (!isVerified) throw new ArgumentException("Password is incorrect");
         var accessToken = jwtTokenService.GenerateToken(user.Id, user.Email.Value);
         var refreshToken = jwtTokenService.GenerateRefreshToken();
+        RefreshToken userRefreshToken = new RefreshToken(user.Id, refreshToken,DateTimeOffset.UtcNow.AddDays(30));
+        await refreshTokenRepository.AddAsync(userRefreshToken, cancellationToken);
         return new AuthTokenResponseDto(accessToken, refreshToken);
 
     }
