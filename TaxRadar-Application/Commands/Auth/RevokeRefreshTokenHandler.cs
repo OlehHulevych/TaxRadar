@@ -6,11 +6,13 @@ using TaxRadar_Application.Queries.Auth;
 
 namespace TaxRadar_Application.Commands.Auth;
 
-public class RevokeRefreshTokenHandler(IRefreshTokenRepository repository):IRequestHandler<RevokeRefreshTokenQuery>
+public class RevokeRefreshTokenHandler(IRefreshTokenRepository repository, IJwtTokenService tokenService):IRequestHandler<RevokeRefreshTokenQuery>
 {
     public async Task Handle(RevokeRefreshTokenQuery request, CancellationToken cancellationToken)
     {
-        var refreshToken = await repository.GetRefreshTokenByHash(request.RefreshToken, cancellationToken);
+        var incomingHash = tokenService.HashRefreshToken(request.RefreshToken);
+        
+        var refreshToken = await repository.GetRefreshTokenByHash(incomingHash, cancellationToken);
         if (refreshToken == null) throw new NotFoundException("Refresh token is required");
         refreshToken.Revoke();
         await repository.SaveChangesAsync(cancellationToken);

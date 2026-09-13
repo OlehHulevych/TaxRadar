@@ -15,6 +15,7 @@ public class User : BaseEntity
     {
         Email = null!;
         FullName = string.Empty;
+        PasswordHash = string.Empty;
     }
 
     public User(string email, string fullName, string passwordHash, string? ico = null, string? dic = null)

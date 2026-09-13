@@ -18,7 +18,8 @@ public class LoginCommandHandler(IUserRepository repository,IRefreshTokenReposit
         if (!isVerified) throw new BadRequestException("Password is incorrect");
         var accessToken = jwtTokenService.GenerateToken(user.Id, user.Email.Value);
         var refreshToken = jwtTokenService.GenerateRefreshToken();
-        RefreshToken userRefreshToken = new RefreshToken(user.Id, refreshToken,DateTimeOffset.UtcNow.AddDays(Convert.ToDouble(configuration["Jwt:RefreshTokenExpiryDays"])));
+        var refreshTokenHash = jwtTokenService.HashRefreshToken(refreshToken);
+        RefreshToken userRefreshToken = new RefreshToken(user.Id, refreshTokenHash,DateTimeOffset.UtcNow.AddDays(Convert.ToDouble(configuration["Jwt:RefreshTokenExpiryDays"])));
         await refreshTokenRepository.AddAsync(userRefreshToken, cancellationToken);
         return new AuthTokenResponseDto(accessToken, refreshToken);
 

@@ -24,14 +24,14 @@ public class AuthController(ISender sender):ControllerBase
     }
 
     
-    [HttpGet]
+    [HttpPost("logout")]
     public async Task<IActionResult> Logout([FromBody] RevokeRefreshTokenQuery query)
     {
         await sender.Send(query);
         return Ok("User is loged out");
     }
 
-    [HttpPost]
+    [HttpPost("refresh")]
     public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenQuery query)
     {
         var result = await sender.Send(query);

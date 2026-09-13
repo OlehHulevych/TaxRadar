@@ -7,4 +7,6 @@ public interface IJwtTokenService
     string GenerateToken(Guid userId, string email);
     string GenerateRefreshToken();
 
+    string HashRefreshToken(string rawToken);
+
 }
