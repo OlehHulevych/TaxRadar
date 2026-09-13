@@ -37,4 +37,9 @@ public class RefreshTokenRepository(ApplicationDbContext context):IRefreshTokenR
         return await context.RefreshTokens.Where(e=>e.UserId==id).FirstOrDefaultAsync(cancellationToken: cancellationToken);
         
     }
+
+    public async Task<RefreshToken?> GetRefreshTokenByHash(string hash, CancellationToken cancellationToken)
+    {
+        return await context.RefreshTokens.Where(rt => rt.TokenHash.Equals(hash)).FirstOrDefaultAsync(cancellationToken);
+    }
 }
