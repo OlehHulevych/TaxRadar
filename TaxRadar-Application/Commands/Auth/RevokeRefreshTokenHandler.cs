@@ -11,7 +11,7 @@ public class RevokeRefreshTokenHandler(IRefreshTokenRepository repository):IRequ
     public async Task Handle(RevokeRefreshTokenQuery request, CancellationToken cancellationToken)
     {
         var refreshToken = await repository.GetRefreshTokenByHash(request.RefreshToken, cancellationToken);
-        if (refreshToken == null) throw new NotFoundException(nameof(RefreshToken), request.RefreshToken);
+        if (refreshToken == null) throw new NotFoundException("Refresh token is required");
         refreshToken.Revoke();
         await repository.SaveChangesAsync(cancellationToken);
     }

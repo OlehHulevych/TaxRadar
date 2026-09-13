@@ -8,10 +8,11 @@ using TaxRadar_Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var Configuration = builder.Configuration;
+var configuration = builder.Configuration;
 builder.Services.AddOpenApi();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddControllers();
+builder.Services.AddAuthorization();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 builder.Services.AddProblemDetails();
@@ -27,9 +28,9 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = Configuration["Jwt:Issuer"],
-        ValidAudience = Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:key"]!))
+        ValidIssuer = configuration["Jwt:Issuer"],
+        ValidAudience = configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Secret"]!))
 
     };
 });

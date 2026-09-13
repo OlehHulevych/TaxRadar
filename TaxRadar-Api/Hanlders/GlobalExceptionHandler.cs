@@ -23,12 +23,17 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
 
 
         };
-        await httpContext.Response.WriteAsJsonAsync(new ProblemDetails
+        var problemDetails = new ProblemDetails
         {
             Type = exception.GetType().Name,
             Title = "An error occured",
             Detail = exception.Message
-        });
+        };
+
+        if (exception is ValidationException validationException)
+            problemDetails.Extensions["errors"] = validationException.Errors;
+
+        await httpContext.Response.WriteAsJsonAsync(problemDetails);
         return true;
     }
 }

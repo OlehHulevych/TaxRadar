@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Tax_Radar_Domain.Entities;
+using Tax_Radar_Domain.ValueObjects;
 using TaxRadar_Application.Exceptions;
 using TaxRadar_Application.Interfaces;
 using TaxRadar_Infrastructure.Persistance;
@@ -34,11 +35,15 @@ public class UserRepository(ApplicationDbContext context):IUserRepository
 
     public async Task<bool> CheckIfUserExistByEmail(string email, CancellationToken cancellationToken)
     {
-        return await context.Users.Where(u=>u.Email.Value.Equals(email)).AnyAsync(cancellationToken: cancellationToken);
+        var searchEmail = new EmailAddress(email);
+        return await context.Users.AnyAsync(u => u.Email ==
+                                                 searchEmail, cancellationToken);
     }
 
     public async Task<User?> GetUserByEmail(string email, CancellationToken cancellationToken)
     {
-        return (await context.Users.FirstOrDefaultAsync(u => u.Email.Value.Equals(email), cancellationToken));
+        var searchEmail = new EmailAddress(email);
+        return await context.Users.FirstOrDefaultAsync(u => u.Email
+                                                            == searchEmail, cancellationToken);
     }
 }

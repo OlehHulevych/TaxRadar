@@ -11,7 +11,7 @@ public class RefreshTokenRepository(ApplicationDbContext context):IRefreshTokenR
     public async Task<RefreshToken?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var refreshToken = await context.RefreshTokens.FirstOrDefaultAsync(c=>c.Id==id,cancellationToken);
-        if (refreshToken == null) throw new NotFoundException(nameof(User), id);
+        if (refreshToken == null) throw new NotFoundException(nameof(RefreshToken), id);
         return refreshToken;
     }
 
