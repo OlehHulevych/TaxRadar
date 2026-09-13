@@ -34,11 +34,11 @@ public class UserRepository(ApplicationDbContext context):IUserRepository
 
     public async Task<bool> CheckIfUserExistByEmail(string email, CancellationToken cancellationToken)
     {
-        return await context.Users.Where(u=>u.Email.Equals(email)).AnyAsync(cancellationToken: cancellationToken);
+        return await context.Users.Where(u=>u.Email.Value.Equals(email)).AnyAsync(cancellationToken: cancellationToken);
     }
 
     public async Task<User?> GetUserByEmail(string email, CancellationToken cancellationToken)
     {
-        return (await context.Users.FirstOrDefaultAsync(u => u.Email.Equals(email), cancellationToken));
+        return (await context.Users.FirstOrDefaultAsync(u => u.Email.Value.Equals(email), cancellationToken));
     }
 }

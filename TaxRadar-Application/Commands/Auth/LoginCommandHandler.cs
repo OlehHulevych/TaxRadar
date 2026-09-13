@@ -1,5 +1,7 @@
 ﻿using MediatR;
+using Tax_Radar_Domain.Entities;
 using TaxRadar_Application.DTOs.Auth;
+using TaxRadar_Application.Exceptions;
 using TaxRadar_Application.Interfaces;
 using TaxRadar_Application.Queries.Auth;
 
@@ -9,9 +11,13 @@ public class LoginCommandHandler(IUserRepository repository, IJwtTokenService jw
 {
     public async Task<AuthTokenResponseDto> Handle(LoginQuery request, CancellationToken cancellationToken)
     {
-        var isExist = await repository.CheckIfUserExistByEmail(request.Email,cancellationToken);
-        if (!isExist) throw new ArgumentException("User with this email doesn't exist");
-        var isVerified = passwordHasher.Verify(request.Password);
+        var user = await repository.GetUserByEmail(request.Email,cancellationToken);
+        if (user==null) throw new NotFoundException(nameof(User),request.Email );
+        var isVerified = passwordHasher.Verify(request.Password, user.PasswordHash);
+        if (!isVerified) throw new ArgumentException("Password is incorrect");
+        var accessToken = jwtTokenService.GenerateToken(user.Id, user.Email.Value);
+        var refreshToken = jwtTokenService.GenerateRefreshToken();
+        return new AuthTokenResponseDto(accessToken, refreshToken);
 
     }
 }
