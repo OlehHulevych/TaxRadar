@@ -24,7 +24,7 @@ public static class DependencyInjection
         services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
-        services.AddSingleton<ITaxRadarProvider, StaticTaxRatesProvider>();
+        services.AddSingleton<ITaxRatesProvider, StaticTaxRatesProvider>();
         return services;
     }
 }

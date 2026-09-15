@@ -3,7 +3,7 @@ using TaxRadar_Application.Models;
 
 namespace TaxRadar_Infrastructure.Services;
 
-public class StaticTaxRatesProvider:ITaxRadarProvider
+public class StaticTaxRatesProvider:ITaxRatesProvider
 {
     private static readonly Dictionary<int, TaxYearRates> Rates = new()
     {

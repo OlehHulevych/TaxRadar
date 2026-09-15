@@ -2,7 +2,7 @@
 
 namespace TaxRadar_Application.Interfaces;
 
-public interface ITaxRadarProvider
+public interface ITaxRatesProvider
 {
     Task<TaxYearRates> GetRatesForYearAsync(int year, CancellationToken ct);
 }
