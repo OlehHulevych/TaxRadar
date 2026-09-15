@@ -8,9 +8,11 @@ public class StaticTaxRatesProvider:ITaxRadarProvider
     private static readonly Dictionary<int, TaxYearRates> Rates = new()
     {
         [2025] = new TaxYearRates(2025, 2_000_000m, 2_536_500m,
-            8_716m, 16_745m, 27_139m),
+            8_716m, 16_745m, 27_139m,
+            1_000_000m, 1_500_000m, 2_000_000m),
         [2026] = new TaxYearRates(2026, 2_000_000m, 2_536_500m,
-            9_162m, 16_745m, 27_139m),
+            9_162m, 16_745m, 27_139m,
+            1_000_000m, 1_500_000m, 2_000_000m),
     };
     public Task<TaxYearRates> GetRatesForYearAsync(int year, CancellationToken ct)
     {

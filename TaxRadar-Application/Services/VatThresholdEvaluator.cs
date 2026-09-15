@@ -2,7 +2,7 @@
 using Tax_Radar_Domain.Models;
 using TaxYearRates = TaxRadar_Application.Models.TaxYearRates;
 
-namespace TaxRadar_Infrastructure.Services;
+namespace TaxRadar_Application.Services;
 
 public class VatThresholdEvaluator
 {
