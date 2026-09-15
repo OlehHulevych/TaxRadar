@@ -3,4 +3,4 @@ using Tax_Radar_Domain.Models;
 
 namespace TaxRadar_Application.Queries.Tax;
 
-public record GetPausalniDatEligibilityQuery(decimal Income, int Year):IRequest<PausalniDanEligibility>;
+public record GetPausalniDanEligibilityQuery(decimal Income, int Year):IRequest<PausalniDanEligibility>;
