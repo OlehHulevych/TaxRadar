@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Tax_Radar_Domain.Entities;
+using Tax_Radar_Domain.Enums;
 using TaxRadar_Application.Exceptions;
 using TaxRadar_Application.Interfaces;
 using TaxRadar_Application.Queries.Invoices;
@@ -54,5 +55,14 @@ public class InvoiceRepository(ApplicationDbContext context):IInvoiceRepository
         if (invoice == null) throw new NotFoundException(nameof(Invoice), id);
         invoice.RemoveItem(itemId);
         await context.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<decimal> GetTurnoverForPeriod(Guid userId, DateOnly fromDate, DateOnly toDate, CancellationToken ct)
+    {
+        var invoices = await context.Invoices.Include(i=>i.Items).Where(invoice =>
+            invoice.UserId == userId && invoice.IssueDate >= fromDate && invoice.IssueDate <= toDate &&
+            invoice.Status != InvoiceStatus.Draft && invoice.Status != InvoiceStatus.Cancelled).ToListAsync(ct);
+        var turnoverForPeriod = invoices.Sum(i => i.GetTotalGrossAmount().Amount);
+        return turnoverForPeriod;
     }
 }
