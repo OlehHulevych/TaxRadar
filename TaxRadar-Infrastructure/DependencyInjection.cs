@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Tax_Radar_Domain.Entities;
 using TaxRadar_Application.Interfaces;
+using TaxRadar_Infrastructure.Options;
 using TaxRadar_Infrastructure.Persistance;
 using TaxRadar_Infrastructure.Repository;
 using TaxRadar_Infrastructure.Services;
@@ -16,6 +17,7 @@ public static class DependencyInjection
         services.AddDbContext<ApplicationDbContext>((options) =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
         services.AddScoped<IClientRepository, ClientRepository>();
+        services.AddHttpClient();
         services.AddScoped<IRepository<User>, UserRepository>();
         services.AddScoped<IRepository<Client>, ClientRepository>();
         services.AddScoped<IExpenseRepository, ExpenseRepository>();
@@ -25,6 +27,7 @@ public static class DependencyInjection
         services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         services.AddSingleton<ITaxRatesProvider, StaticTaxRatesProvider>();
+        services.Configure<GeminiOptions>(configuration.GetSection("Gemini"));
         return services;
     }
 }
